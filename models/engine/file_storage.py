@@ -1,28 +1,5 @@
 #!/usr/bin/python3
 """
-In this module we recreate BaseModel by using
-dictionary representation
-"""
-
-import json
-import os
-from models.base_model import BaseModel
-from models.user import User
-from models.state import State
-from models.city import City
-from models.amenity import Amenity
-from models.place import Place
-from models.review import Review
-
-
-class FileStorage:
-    """ serializes instances to a JSON file
-    and deserializes JSON file to instances
-    """
-    __file_path = "file.json"
-    __objects = {}
-#!/usr/bin/python3
-"""
 This module contains a class FileStorage that serializes
 instances to a JSON file and deserializes JSON file to
 instances
@@ -82,31 +59,3 @@ class FileStorage:
                 FileStorage.__objects = json.load(json_file)
             for key, val in FileStorage.__objects.items():
                 FileStorage.__objects[key] = FileStorage.class_dict[val["__class__"]](**val)
-
-
-
-    def all(self):
-        """return dictionary objects"""
-        return FileStorage.__objects
-
-    def new(self, obj):
-        """Sets the dictionary in __object with obj
-        with key <obj class name>.id"""
-        FileStorage.__objects[obj.__class__.__name__ + "." + str(obj.id)] = obj
-
-    def save(self):
-        """serializes objs to JSON file (path:__file_path)"""
-        with open(FileStorage.__file_path, 'w', encoding='utf-8') as filename:
-            new_dict = {key: obj.to_dict() for key, obj in
-                       FileStorage.__objects.items()}
-            json.dump(new_dict, filename)
-
-    def reload(self):
-        """Reload the file"""
-        if (os.path.isfile(FileStorage.__file_path)):
-            with open(FileStorage.__file_path, 'r', encoding='utf-8')
-            as filename:
-                load_json = json.load(filename)
-                for key, value in load_json.items():
-                    FileStorage.__objects[key] = eval(
-                            value['__class__'])(**value)
