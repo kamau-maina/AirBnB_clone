@@ -30,31 +30,26 @@ class BaseModel:
                 if 'updated_at' not in kwargs.keys():
                     self.updated_at = datetime.now()
                 setattr(self, key, value)
-        else:
+      else:
             self.id = str(uuid4())
             self.created_at = datetime.now()
-            self.updated_at = datetime.now()
+            self.updated_at = self.created_at
             models.storage.new(self)
 
     def __str__(self):
-        """Prints out specified attributes of an instance"""
-        classname = type(self).__name__
-        iid = self.id
-        i_dic = self.__dict__
-        return "[{}] ({}) {}".format(classname, iid, i_dic)
+        """ String """
+        return('[' + type(self).__name__ + '] (' + str(self.id) +
+               ') ' + str(self.__dict__))
 
     def save(self):
-        """updates the `updated_at` attribute with current datetime"""
+        """ save function """
         self.updated_at = datetime.now()
         models.storage.save()
 
     def to_dict(self):
-        """returns a dictionary with all key/values of __dict__"""
-        new_dict = {}
-        for key, value in self.__dict__.items():
-            if key == "created_at" or key == "updated_at":
-                new_dict[key] = value.isoformat()
-            else:
-                new_dict[key] = value
-        new_dict["__class__"] = type(self).__name__
-        return new_dict
+        """ Return a dictonary """
+        aux_dict = self.__dict__.copy()
+        aux_dict['__class__'] = self.__class__.__name__
+        aux_dict['created_at'] = self.created_at.isoformat()
+        aux_dict['updated_at'] = self.updated_at.isoformat()
+        return aux_dict
