@@ -15,7 +15,7 @@ class BaseModel:
     """
     def __init__(self, *args, **kwargs):
         """Initialises all instances with id and date attributes"""
-       if kwargs:
+        if kwargs:
             for key, value in kwargs.items():
                 if key != "__class__":
                     setattr(self, key, value)
